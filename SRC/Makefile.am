@@ -14,6 +14,8 @@ CSRC = cnaitr.f cnapps.f cnaup2.f cnaupd.f cneigh.f cneupd.f cngets.f cstatn.f \
 ZSRC = znaitr.f znapps.f znaup2.f znaupd.f zneigh.f zneupd.f zngets.f zstatn.f \
        zgetv0.f zsortc.f
 
+SRCS = arseed.f
+
 if ICB
 SSRC += icbass.F90 icbasn.F90
 DSRC += icbads.F90 icbadn.F90
@@ -24,7 +26,7 @@ endif
 EXTRA_DIST = debug.h stat.h version.h
 
 lib_LTLIBRARIES = libarpack@LIBSUFFIX@.la
-libarpack@LIBSUFFIX@_la_SOURCES = $(SSRC) $(DSRC) $(CSRC) $(ZSRC)
+libarpack@LIBSUFFIX@_la_SOURCES = $(SSRC) $(DSRC) $(CSRC) $(ZSRC) $(SRCS)
 libarpack@LIBSUFFIX@_la_SOURCES += $(top_builddir)/dbgini.f
 libarpack@LIBSUFFIX@_la_SOURCES += $(top_builddir)/staini.f
 libarpack@LIBSUFFIX@_la_LIBADD = $(top_builddir)/UTIL/libarpackutil.la $(LAPACK_LIBS) $(BLAS_LIBS)

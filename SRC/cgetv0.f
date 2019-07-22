@@ -90,6 +90,7 @@ c     pp 357-385.
 c
 c\Routines called:
 c     arscnd  ARPACK utility routine for timing.
+c     arseed  ARPACK utility routine for the internal random state.
 c     cvout   ARPACK utility routine that prints vectors.
 c     clarnv  LAPACK routine for generating a random vector.
 c     cgemv   Level 2 BLAS routine for matrix vector multiplication.
@@ -156,19 +157,19 @@ c     %------------------------%
 c     | Local Scalars & Arrays |
 c     %------------------------%
 c
-      logical    first, inits, orth
+      logical    first, orth
       integer    idist, iseed(4), iter, msglvl, jj
       Real
      &           rnorm0
       Complex
      &           cnorm
-      save       first, iseed, inits, iter, msglvl, orth, rnorm0
+      save       first, iter, msglvl, orth, rnorm0
 c
 c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   ccopy, cgemv, clarnv, cvout, arscnd
+      external   ccopy, cgemv, clarnv, cvout, arscnd, arseed
 c
 c     %--------------------%
 c     | External Functions |
@@ -180,29 +181,10 @@ c
      &           cdotc
       external   cdotc, scnrm2, slapy2
 c
-c     %-----------------%
-c     | Data Statements |
-c     %-----------------%
-c
-      data       inits /.true./
-c
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
 c
-c
-c     %-----------------------------------%
-c     | Initialize the seed of the LAPACK |
-c     | random number generator           |
-c     %-----------------------------------%
-c
-      if (inits) then
-          iseed(1) = 1
-          iseed(2) = 3
-          iseed(3) = 5
-          iseed(4) = 7
-          inits = .false.
-      end if
 c
       if (ido .eq.  0) then
 c
@@ -230,7 +212,9 @@ c        %-----------------------------------------------------%
 c
          if (.not.initv) then
             idist = 2
+            call arseed('C', .false., iseed)
             call clarnv (idist, iseed, n, resid)
+            call arseed('C', .true., iseed)
          end if
 c
 c        %----------------------------------------------------------%

@@ -94,6 +94,7 @@ c     TR95-13, Department of Computational and Applied Mathematics.
 c
 c\Routines called:
 c     arscnd  ARPACK utility routine for timing.
+c     arseed  ARPACK utility routine for the internal random state.
 c     dvout   ARPACK utility routine for vector output.
 c     dlarnv  LAPACK routine for generating a random vector.
 c     dgemv   Level 2 BLAS routine for matrix vector multiplication.
@@ -157,17 +158,17 @@ c     %------------------------%
 c     | Local Scalars & Arrays |
 c     %------------------------%
 c
-      logical    first, inits, orth
+      logical    first, orth
       integer    idist, iseed(4), iter, msglvl, jj
       Double precision
      &           rnorm0
-      save       first, iseed, inits, iter, msglvl, orth, rnorm0
+      save       first, iter, msglvl, orth, rnorm0
 c
 c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dlarnv, dvout, dcopy, dgemv, arscnd
+      external   dlarnv, dvout, dcopy, dgemv, arscnd, arseed
 c
 c     %--------------------%
 c     | External Functions |
@@ -183,29 +184,10 @@ c     %---------------------%
 c
       intrinsic    abs, sqrt
 c
-c     %-----------------%
-c     | Data Statements |
-c     %-----------------%
-c
-      data       inits /.true./
-c
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
 c
-c
-c     %-----------------------------------%
-c     | Initialize the seed of the LAPACK |
-c     | random number generator           |
-c     %-----------------------------------%
-c
-      if (inits) then
-          iseed(1) = 1
-          iseed(2) = 3
-          iseed(3) = 5
-          iseed(4) = 7
-          inits = .false.
-      end if
 c
       if (ido .eq.  0) then
 c
@@ -233,7 +215,9 @@ c        %-----------------------------------------------------%
 c
          if (.not.initv) then
             idist = 2
+            call arseed('D', .false., iseed)
             call dlarnv (idist, iseed, n, resid)
+            call arseed('D', .true., iseed)
          end if
 c
 c        %----------------------------------------------------------%
