@@ -156,9 +156,53 @@ int zn() {
   return 0;
 }
 
+int check_arseed(char const* rstate) {
+  bool set;
+  a_int iseed[4] = {0};
+
+  /* Get default seed */
+  arseed_c(rstate, false, iseed);
+  if (!(iseed[0] == 1 && iseed[1] == 3 && iseed[2] == 5 && iseed[3] == 7)) {
+    printf("wrong default seed: %c: %d %d %d %d\n", rstate[0],
+           iseed[0], iseed[1], iseed[2], iseed[3]);
+    return 1;
+  }
+
+  /* Set seed */
+  iseed[0] = 0;
+  iseed[1] = 0;
+  iseed[2] = 0;
+  iseed[3] = 0;
+  arseed_c(rstate, true, iseed);
+  iseed[0] = 1;
+  iseed[1] = 1;
+  iseed[2] = 1;
+  iseed[3] = 1;
+
+  /* Get seed */
+  arseed_c(rstate, false, iseed);
+  if (!(iseed[0] == 0 && iseed[1] == 0 && iseed[2] == 0 && iseed[3] == 0)) {
+    printf("seed get failed: %c: %d %d %d %d\n", rstate[0],
+           iseed[0], iseed[1], iseed[2], iseed[3]);
+    return 1;
+  }
+
+  return 0;
+}
+
 int main() {
+  int rc;
   sstats_c();
-  int rc = ds(); // arpack without debug.
+
+  char *states = "SDCZ";
+  while (*states != '\0') {
+    // seed manipulations
+    rc = check_arseed(states);
+    if (rc != 0) return rc;
+    ++states;
+  }
+
+  rc = ds(); // arpack without debug.
   if (rc != 0) return rc;
   a_int nopx_c, nbx_c, nrorth_c, nitref_c, nrstrt_c;
   float tsaupd_c, tsaup2_c, tsaitr_c, tseigt_c, tsgets_c, tsapps_c, tsconv_c;
@@ -179,6 +223,7 @@ int main() {
           1, 1, 1, 1, 1, 1, 1,
           1, 1, 1, 1, 1, 1, 1); // set debug flags.
   rc = zn(); // arpack with debug.
+  if (rc != 0) return rc;
 
   return rc;
 }
