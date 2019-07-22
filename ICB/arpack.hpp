@@ -39,6 +39,17 @@ enum class howmny : int {
   ritz_specified
 };
 
+enum class rstate : int {
+    /// single precision random state
+    float_state,
+    /// single precision complex random state
+    complex_float_state,
+    /// double precision random state
+    double_state,
+    /// double precision complex random state
+    complex_double_state
+};
+
 namespace internal {
 #include "arpack.h"
 
@@ -88,6 +99,28 @@ inline char const* convert_to_char(howmny const option) {
     }
   }
   return "A";
+}
+
+inline char const* convert_to_char(rstate const option) {
+  switch (option) {
+    case rstate::float_state: {
+      return "S";
+      break;
+    }
+    case rstate::complex_float_state: {
+      return "C";
+      break;
+    }
+    case rstate::double_state: {
+      return "D";
+      break;
+    }
+    case rstate::complex_double_state: {
+      return "Z";
+      break;
+    }
+  }
+  return "D";
 }
 }  // namespace internal
 
@@ -250,6 +283,10 @@ inline void neupd(bool rvec, howmny const howmny_option, a_int* select,
                      reinterpret_cast<_Complex double*>(workd),
                      reinterpret_cast<_Complex double*>(workl), lworkl,
                      rwork, &info);
+}
+
+inline void arseed(rstate random_state, bool set, a_int* iseed) {
+  internal::arseed_c(internal::convert_to_char(random_state), set, iseed);
 }
 }  // namespace arpack
 

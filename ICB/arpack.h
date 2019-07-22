@@ -19,6 +19,7 @@ void ssaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int ne
 void sseupd_c(bool rvec, char const* howmny, a_int const* select, float* d, float* z, a_int ldz, float sigma, char const* bmat, a_int n, char const* which, a_int nev, float tol, float* resid, a_int ncv, float* v, a_int ldv, a_int* iparam, a_int* ipntr, float* workd, float* workl, a_int lworkl, a_int* info);
 void znaupd_c(a_int* ido, char const* bmat, a_int n, char const* which, a_int nev, double tol, double _Complex* resid, a_int ncv, double _Complex* v, a_int ldv, a_int* iparam, a_int* ipntr, double _Complex* workd, double _Complex* workl, a_int lworkl, double* rwork, a_int* info);
 void zneupd_c(bool rvec, char const* howmny, a_int const* select, double _Complex* d, double _Complex* z, a_int ldz, double _Complex sigma, double _Complex* workev, char const* bmat, a_int n, char const* which, a_int nev, double tol, double _Complex* resid, a_int ncv, double _Complex* v, a_int ldv, a_int* iparam, a_int* ipntr, double _Complex* workd, double _Complex* workl, a_int lworkl, double* rwork, a_int* info);
+void arseed_c(char const* rstate, bool set, a_int* iseed);
 
 #ifdef  __cplusplus
 }

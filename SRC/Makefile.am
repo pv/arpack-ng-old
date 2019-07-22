@@ -21,6 +21,7 @@ SSRC += icbass.F90 icbasn.F90
 DSRC += icbads.F90 icbadn.F90
 CSRC += icbacn.F90
 ZSRC += icbazn.F90
+SRCS += icbasd.F90
 endif
 
 EXTRA_DIST = debug.h stat.h version.h
